@@ -9,23 +9,7 @@ from PyQt5 import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
-# enable highdpi scaling and icons
-QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True) 
-QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
-iconFile = 'statMeter.ico'
-
-# get path and set icon file
-if getattr(sys, 'frozen', False):
-    application_path = sys._MEIPASS
-elif __file__:
-    application_path = os.path.dirname(__file__)
-
-# create application
-application = QApplication([])
-windowWidth = 55 * 16 # *  1
-windowHeight = 55 * 9 # * 2
-# size modifier, base ratio, ratio modifier
-# 800, 450 / 960, 540
+#----------------------------------------
 
 class Worker(QObject):
     finished = pyqtSignal()
@@ -184,14 +168,35 @@ class MainWindow(QMainWindow):
     def closeEvent(self, event):
             self.runningBool=False
             event.accept()
+            
+#----------------------------------------
+            
+if __name__ == "__main__":   
+    # enable highdpi scaling and icons
+    QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True) 
+    QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
+    iconFile = 'statMeter.ico'
 
-# create and show window
-appWindow = MainWindow()
-appWindow.show()  
+    # get path and set icon file
+    if getattr(sys, 'frozen', False):
+        application_path = sys._MEIPASS
+    elif __file__:
+        application_path = os.path.dirname(__file__)
 
-# spawn collection thread
-collectionThread = threading.Thread(target=appWindow.updateStatsCycle)
-collectionThread.start()
+    # define application
+    application = QApplication([])
+    windowWidth = 55 * 16 # *  1
+    windowHeight = 55 * 9 # * 2
+    # size modifier, base ratio, ratio modifier
+    # 800, 450 / 960, 540
+    
+    # create and show window
+    appWindow = MainWindow()
+    appWindow.show()  
 
-# start event loop
-application.exec()
+    # spawn collection thread
+    collectionThread = threading.Thread(target=appWindow.updateStatsCycle)
+    collectionThread.start()
+
+    # start event loop
+    application.exec()
